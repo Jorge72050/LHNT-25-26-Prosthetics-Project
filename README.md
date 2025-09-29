@@ -1,1 +1,1 @@
-# LHNT-25-26-HSI
+# LHNT 26-25 Prosthetic Project
