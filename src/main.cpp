@@ -1,5 +1,6 @@
 #include <ESP32Servo.h>
 
+// Maybe more libraries
 static const int servoPin1 = 12;  // Pin where the servo is connected
 static const int servoPin2 = 27;  // Pin where the servo is connected
 static const int servoPin3 = 25;  // Pin where the servo is connected
