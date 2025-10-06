@@ -1,18 +1,7 @@
 #include <ESP32Servo.h>
+#include "servo_control.h"
 
-// Maybe more libraries
-static const int servoPin1 = 12;  // Pin where the servo is connected
-static const int servoPin2 = 27;  // Pin where the servo is connected
-static const int servoPin3 = 25;  // Pin where the servo is connected
-static const int servoPin4 = 32;  // Pin where the servo is connected
-static const int servoPin5 = 35;  // Pin where the servo is connected
-
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
-
+/*
 void setup() {
     Serial.begin(115200);      // Initialize serial communication at 115200 baud rate
     servo1.setPeriodHertz(50);  // Set the frequency for the servo (50Hz typical)
@@ -86,4 +75,15 @@ void loop() {
         Serial.println(pos);            // Print the pulse width in microseconds
         delay(20);             // Wait for the servo to move
     }
+}
+
+*/
+
+void setup() {
+    initializeServos();
+}
+
+void loop() {
+    move_clockwise(500,2500,20);
+    move_counterclockwise(2500,500,20);
 }
