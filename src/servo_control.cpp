@@ -16,7 +16,7 @@ Servo servo4;
 Servo servo5;
 Servo tempServo;
 
-void initializeServos() {
+void initializeAll() {
     Serial.begin(115200);
     servo1.setPeriodHertz(50);
     servo2.setPeriodHertz(50);
@@ -30,7 +30,7 @@ void initializeServos() {
     servo5.attach(servoPin5);
 }
 
-void move_clockwise(int start_pos, int end_pos, int increment) {
+void move_180_clockwise(int start_pos, int end_pos, int increment) {
     for(int pos = start_pos; pos <= end_pos; pos+=increment) {
         servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
         servo2.writeMicroseconds(pos);
@@ -41,7 +41,7 @@ void move_clockwise(int start_pos, int end_pos, int increment) {
     }
 }
 
-void move_counterclockwise(int start_pos, int end_pos, int increment) {
+void move_180_counterclockwise(int start_pos, int end_pos, int increment) {
     for(int pos = start_pos; pos >= end_pos; pos-=increment) {
         servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
         servo2.writeMicroseconds(pos);
@@ -52,7 +52,7 @@ void move_counterclockwise(int start_pos, int end_pos, int increment) {
     }
 }
 
-void move_all_servos_to(int pos) {
+void move_180_all_servos_to(int pos) {
     servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
     servo2.writeMicroseconds(pos);
     servo3.writeMicroseconds(pos);
@@ -60,14 +60,14 @@ void move_all_servos_to(int pos) {
     servo5.writeMicroseconds(pos);
 }
 
-void move_one_servo_to(int pin, int pos){
+void move_180_one_servo_to(int pin, int pos){
     tempServo.attach(pin);
     tempServo.writeMicroseconds(pos);
     delay(1000);
     tempServo.detach();
 }
 
-void move_one_clockwise(int pin, int start_pos, int end_pos, int increment){
+void move_180_one_clockwise(int pin, int start_pos, int end_pos, int increment){
     tempServo.attach(pin);
     for(int pos = start_pos; pos <= end_pos; pos += increment) {
         tempServo.writeMicroseconds(pos);
@@ -76,7 +76,7 @@ void move_one_clockwise(int pin, int start_pos, int end_pos, int increment){
     tempServo.detach();
 }
 
-void move_one_counterclockwise(int pin, int start_pos, int end_pos, int increment){
+void move_180_one_counterclockwise(int pin, int start_pos, int end_pos, int increment){
     tempServo.attach(pin);
     for(int pos = start_pos; pos >= end_pos; pos -= increment) {
         tempServo.writeMicroseconds(pos);
@@ -85,3 +85,58 @@ void move_one_counterclockwise(int pin, int start_pos, int end_pos, int incremen
     tempServo.detach();
 }
 
+void move_360_servos_clockwise(int speed, int duration){
+    if (speed > 90){
+        move_360_servos_counterclockwise(speed, duration);
+    }
+    servo1.write(speed);
+    servo2.write(speed);
+    servo3.write(speed);
+    servo4.write(speed);
+    servo5.write(speed);
+    Serial.println("clockwise");
+    delay(duration);
+
+    // 90 stops the servos and puts them at 0 speed
+    servo1.write(90);
+    servo2.write(90);
+    servo3.write(90);
+    servo4.write(90);
+    servo5.write(90);
+}
+void move_360_servos_counterclockwise(int speed, int duration){
+    if (speed < 90){
+        move_360_servos_clockwise(speed, duration);
+    }
+    servo1.write(speed);
+    servo2.write(speed);
+    servo3.write(speed);
+    servo4.write(speed);
+    servo5.write(speed);
+    delay(duration);
+    
+    // 90 stops the servos and puts them at 0 speed
+    servo1.write(90);
+    servo2.write(90);
+    servo3.write(90);
+    servo4.write(90);
+    servo5.write(90);
+}
+void move_360_one_clockwise(int pin, int speed, int duration){
+    if (speed > 90){
+        move_360_one_counterclockwise(speed, duration);
+    }
+    tempServo.attach(pin);
+    tempServo.write(speed);
+    delay(duration);
+    tempServo.detach();
+}
+void move_360_one_counterclockwise(int pin, int speed, int duration){
+    if (speed < 90){
+        move_360_servos_clockwise(speed, duration);
+    }
+    tempServo.attach(pin);
+    tempServo.write(speed);
+    delay(duration);
+    tempServo.detach();
+}
