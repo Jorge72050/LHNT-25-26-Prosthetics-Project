@@ -12,11 +12,11 @@ int solenoidPin = 13;                    //This is the output pin on the Arduino
 // Linear actuator code
 
 // Define servo pins
-static const int servoPin1 = 26;
-static const int servoPin2 = 27;
-static const int servoPin3 = 25;
-static const int servoPin4 = 32;
-static const int servoPin5 = 33;
+const int servoPin1 = 12;
+const int servoPin2 = 27;
+const int servoPin3 = 25;
+const int servoPin4 = 32;
+const int servoPin5 = 35;
 
 #define UDP_PORT 4210
 
@@ -83,7 +83,7 @@ void setup() {
     Serial.println(UDP_PORT);
 }
 
-void loop() {
+void wifi_and_run() {
     WiFiClient client = server.available();   // Listen for incoming clients
     if (client) {
         Serial.println("New Client.");

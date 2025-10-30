@@ -1,7 +1,11 @@
 // This file has general rotator functions
 #ifndef SERVO_CONTROL_H
 #define SERVO_CONTROL_H
-#include <ESP32Servo.h>
+#if defined(ESP32)
+    #include <ESP32Servo.h>
+#else
+    #include <Servo.h>
+#endif
 
 extern Servo servo1;
 extern Servo servo2;

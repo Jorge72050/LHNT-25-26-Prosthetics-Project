@@ -3,11 +3,12 @@
 
 // Define the Servo objects (the actual memory)
 
-const int servoPin1 = 12;
-const int servoPin2 = 27;
-const int servoPin3 = 25;
-const int servoPin4 = 32;
-const int servoPin5 = 35;
+// Example pins for Arduino Uno use
+const int servoPin1 = 3;
+const int servoPin2 = 5;
+const int servoPin3 = 6;
+const int servoPin4 = 9;
+const int servoPin5 = 10;
 
 Servo servo1;
 Servo servo2;
@@ -18,11 +19,6 @@ Servo tempServo;
 
 void initializeServos() {
     Serial.begin(115200);
-    servo1.setPeriodHertz(50);
-    servo2.setPeriodHertz(50);
-    servo3.setPeriodHertz(50);
-    servo4.setPeriodHertz(50);
-    servo5.setPeriodHertz(50);
     servo1.attach(servoPin1);
     servo2.attach(servoPin2);
     servo3.attach(servoPin3);
