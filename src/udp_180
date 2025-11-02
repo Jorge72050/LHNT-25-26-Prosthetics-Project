@@ -1,0 +1,194 @@
+// Load Wi-Fi library
+#include <WiFi.h>
+#include <ESP32Servo.h>
+#include <WiFiUdp.h>
+#include <Stepper.h>
+
+// Stepper code
+const int stepsPerRevolution = 512;
+Stepper myStepper(stepsPerRevolution, 4, 16, 17, 18);
+int solenoidPin = 13; // Output pin for solenoid
+
+// Servo pins
+const int servoPin1 = 12;
+const int servoPin2 = 27;
+const int servoPin3 = 25;
+const int servoPin4 = 32;
+const int servoPin5 = 35;
+
+#define UDP_PORT 4210
+
+// Servo objects
+Servo servo1, servo2, servo3, servo4, servo5;
+
+// Network credentials
+const char* ssid = "ESP32-Access-Point";
+const char* password = "123456789";
+
+// Web server
+WiFiServer server(80);
+
+// UDP
+WiFiUDP UDP;
+char packet[255];
+char reply[] = "Packet received!";
+
+void setup() {
+    Serial.begin(115200);
+    Serial.println("=== SETUP START ===");
+
+    myStepper.setSpeed(70);
+    pinMode(solenoidPin, OUTPUT);
+
+    // Initialize servos
+    servo1.attach(servoPin1);
+    servo2.attach(servoPin2);
+    servo3.attach(servoPin3);
+    servo4.attach(servoPin4);
+    servo5.attach(servoPin5);
+
+    // Start WiFi AP
+    Serial.println("Setting up Access Point...");
+    WiFi.softAP(ssid, password);
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("AP IP address: ");
+    Serial.println(IP);
+
+    server.begin();
+
+    // Start UDP
+    UDP.begin(UDP_PORT);
+    Serial.print("Listening on UDP port ");
+    Serial.println(UDP_PORT);
+    Serial.println("=== SETUP COMPLETE ===");
+}
+
+void loop() {
+    wifi_and_run();
+}
+
+void wifi_and_run() {
+    // Check for client
+    WiFiClient client = server.available();
+    if (client) {
+        Serial.println("[wifi_and_run] New Client connected.");
+        client.stop();
+        Serial.println("[wifi_and_run] Client disconnected.");
+    }
+
+    // Check for UDP packets
+    int packetSize = UDP.parsePacket();
+    if (packetSize) {
+        Serial.print("[wifi_and_run] Received UDP packet, size: ");
+        Serial.println(packetSize);
+
+        int len = UDP.read(packet, 255);
+        packet[len] = '\0';
+        Serial.print("[wifi_and_run] Raw packet data: ");
+        Serial.println(packet);
+
+        int val = strtol(packet, NULL, 16);
+        Serial.print("[wifi_and_run] Parsed value: ");
+        Serial.println(val);
+
+        // Dispatch to functions
+        switch (val) {
+            case 1:
+                Serial.println("[wifi_and_run] Calling rotate_clockwise()");
+                rotate_clockwise();
+                break;
+            case 0:
+                Serial.println("[wifi_and_run] Calling rotate_counterclockwise()");
+                rotate_counterclockwise();
+                break;
+            case 2:
+                Serial.println("[wifi_and_run] Calling push_actuator()");
+                push_actuator();
+                break;
+            case 3:
+                Serial.println("[wifi_and_run] Calling pull_actuator()");
+                pull_actuator();
+                break;
+            case 4:
+                Serial.println("[wifi_and_run] Calling stepper_clockwise()");
+                stepper_clockwise();
+                break;
+            case 5:
+                Serial.println("[wifi_and_run] Calling stepper_counterclockwise()");
+                stepper_counterclockwise();
+                break;
+            default:
+                Serial.print("[wifi_and_run] Unknown command: ");
+                Serial.println(val);
+                break;
+        }
+
+        // Send return packet
+        Serial.println("[wifi_and_run] Sending reply to sender...");
+        UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+        UDP.write((uint8_t*)reply, strlen(reply));
+        UDP.endPacket();
+        Serial.println("[wifi_and_run] Reply sent successfully!");
+    }
+}
+
+void servo_setup() {
+    Serial.println("[servo_setup] Attaching servos...");
+    servo1.attach(servoPin1);
+    servo2.attach(servoPin2);
+    servo3.attach(servoPin3);
+    servo4.attach(servoPin4);
+    servo5.attach(servoPin5);
+}
+
+void rotate_clockwise() {
+    for(int pos = start_pos; pos <= end_pos; pos+=increment) {
+        servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
+        servo2.writeMicroseconds(pos);
+        servo3.writeMicroseconds(pos);
+        servo4.writeMicroseconds(pos);
+        servo5.writeMicroseconds(pos);
+        delay(20);   
+    }
+}
+
+void rotate_counterclockwise() {
+    for(int pos = start_pos; pos >= end_pos; pos-=increment) {
+        servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
+        servo2.writeMicroseconds(pos);
+        servo3.writeMicroseconds(pos);
+        servo4.writeMicroseconds(pos);
+        servo5.writeMicroseconds(pos);
+        delay(20);   
+    }
+}
+
+void stepper_clockwise() {
+    Serial.println("[stepper_clockwise] Entered");
+    myStepper.step(stepsPerRevolution);
+    delay(500);
+    Serial.println("[stepper_clockwise] Step complete.");
+}
+
+void stepper_counterclockwise() {
+    Serial.println("[stepper_counterclockwise] Entered");
+    myStepper.step(-stepsPerRevolution);
+    delay(500);
+    Serial.println("[stepper_counterclockwise] Step complete.");
+}
+
+void push_actuator() {
+    Serial.println("[push_actuator] Entered");
+    digitalWrite(solenoidPin, HIGH);
+    Serial.println("[push_actuator] Solenoid ON");
+    delay(1000);
+    Serial.println("[push_actuator] Done");
+}
+
+void pull_actuator() {
+    Serial.println("[pull_actuator] Entered");
+    digitalWrite(solenoidPin, LOW);
+    Serial.println("[pull_actuator] Solenoid OFF");
+    delay(1000);
+    Serial.println("[pull_actuator] Done");
+}
