@@ -124,7 +124,7 @@ void move_360_servos_counterclockwise(int speed, int duration){
 }
 void move_360_one_clockwise(int pin, int speed, int duration){
     if (speed > 90){
-        move_360_one_counterclockwise(speed, duration);
+        move_360_one_counterclockwise(pin, speed, duration);
     }
     tempServo.attach(pin);
     tempServo.write(speed);

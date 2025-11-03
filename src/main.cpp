@@ -3,25 +3,25 @@
 #include <ESP32Servo.h>
 #include <WiFiUdp.h>
 #include <Stepper.h>
+#include "servo_control.h"
 
 // Stepper code
 const int stepsPerRevolution = 512;
 Stepper myStepper(stepsPerRevolution, 4, 16, 17, 18);
-int solenoidPin = 13;                    //This is the output pin on the Arduino
+//int solenoidPin = 13;                    //This is the output pin on the Arduino
 
 // Linear actuator code
 
 // Define servo pins
-const int servoPin1 = 12;
-const int servoPin2 = 27;
-const int servoPin3 = 25;
-const int servoPin4 = 32;
-const int servoPin5 = 35;
+//const int servoPin1 = 26;
+//const int servoPin2 = 27;
+//const int servoPin3 = 25;
+//const int servoPin4 = 32;
+//const int servoPin5 = 33;
 
 #define UDP_PORT 4210
 
 // Servo objects
-Servo servo1, servo2, servo3, servo4, servo5;
 
 // Replace with your network credentials
 const char* ssid = "ESP32-Access-Point";
@@ -49,11 +49,11 @@ char reply[] = "Packet received!";
 void setup() {
     Serial.begin(115200);
     myStepper.setSpeed(70);
-    pinMode(solenoidPin, OUTPUT);          //Sets that pin as an output
+    //pinMode(solenoidPin, OUTPUT);          //Sets that pin as an output
 
     // Initialize the output variables as outputs
-    pinMode(output26, OUTPUT);
-    pinMode(output27, OUTPUT);
+    //pinMode(output26, OUTPUT);
+    //pinMode(output27, OUTPUT);
 
     // Set outputs to LOW
     digitalWrite(output26, LOW);
@@ -83,7 +83,7 @@ void setup() {
     Serial.println(UDP_PORT);
 }
 
-void wifi_and_run() {
+void loop() {
     WiFiClient client = server.available();   // Listen for incoming clients
     if (client) {
         Serial.println("New Client.");
@@ -106,18 +106,20 @@ void wifi_and_run() {
         int val = strtol(packet, NULL, 16); // convert ASCII hex string to int
         Serial.println(val);
         if (val == 1) {
-            rotate_clockwise();
+            Serial.println("Packet received");
+            move_180_clockwise(0,2500,20);
         } else if (val == 0) {
-            rotate_counterclockwise();
-        } else if (val == 2){
-          push_actuator();
-        } else if (val == 3){
-          pull_actuator();
-        } else if (val == 4){
-          stepper_clockwise();
-        } else if (val == 5){
-          stepper_counterclockwise();
-        }
+            Serial.println("Other packet received");
+            move_180_counterclockwise(0,2500,20);
+        } //else if (val == 2){
+          //push_actuator();
+        //} //else if (val == 3){
+          //pull_actuator();
+        //} //else if (val == 4){
+          //stepper_clockwise();
+        //} //else if (val == 5){
+          //stepper_counterclockwise();
+        //}
         
         Serial.print("Packet received: ");
         Serial.println(packet);
@@ -129,65 +131,3 @@ void wifi_and_run() {
     }
 }
 
-void servo_setup() {
-    // Initialize servo objects and attach to pins
-    servo1.attach(servoPin1);
-    servo2.attach(servoPin2);
-    servo3.attach(servoPin3);
-    servo4.attach(servoPin4);
-    servo5.attach(servoPin5);
-}
-
-void rotate_clockwise() {
-    // Rotate clockwise by setting appropriate servo speed
-    servo_setup();
-    servo1.write(0);
-    servo2.write(0);
-    servo3.write(0);
-    servo4.write(0);
-    servo5.write(0);
-    Serial.println("clockwise");
-    delay(2250);
-    servo1.write(90);
-    servo2.write(90);
-    servo3.write(90);
-    servo4.write(90);
-    servo5.write(90);
-}
-
-void rotate_counterclockwise() {
-    // Rotate counterclockwise by setting appropriate servo speed
-    servo1.write(180);
-    servo2.write(180);
-    servo3.write(180);
-    servo4.write(180);
-    servo5.write(180);
-    delay(2250);
-    servo1.write(90);
-    servo2.write(90);
-    servo3.write(90);
-    servo4.write(90);
-    servo5.write(90);
-}
-
-// Stepper functions
-void stepper_clockwise() {
-    Serial.println("Clockwise");
-    myStepper.step(stepsPerRevolution);
-    delay(500);
-}
-
-void stepper_counterclockwise() {
-    Serial.println("Counterclockwise");
-    myStepper.step(-stepsPerRevolution);
-    delay(500);
-}
-
-void push_actuator(){
-  digitalWrite(solenoidPin, HIGH);      //Switch Solenoid ON
-  delay(1000);   
-}
-void pull_actuator(){                      //Wait 1 Second
-  digitalWrite(solenoidPin, LOW);       //Switch Solenoid OFF
-  delay(1000);                          //Wait 1 Second
-}
