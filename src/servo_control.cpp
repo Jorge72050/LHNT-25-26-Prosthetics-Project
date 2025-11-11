@@ -140,3 +140,6 @@ void move_360_one_counterclockwise(int pin, int speed, int duration){
     delay(duration);
     tempServo.detach();
 }
+
+void stepper_clockwise();
+    
