@@ -1,7 +1,6 @@
 #include "servo_control.h"
 #include <ESP32Servo.h>
-#include <Arduino.h>
-
+#include <L298N.h>
 // Define the Servo objects (the actual memory)
 
 const int servoPin1 = 7;
@@ -9,9 +8,17 @@ const int servoPin2 = 8;
 const int servoPin3 = 9;
 const int servoPin4 = 10;
 const int servoPin5 = 11;
-const int motorIN1 = 12;
-const int motorIN2 = 13;
-const int motorPWM = 14;
+
+// DC Motor Pin
+int pinENA = 12; 
+int pinENB = 13; 
+//int enable1Pin = 14; 
+
+// DC Motor PWM Properties
+const int freq = 30000;
+const int pwmChannel = 0;
+const int resolution = 8;
+int speed = 0;
 
 
 Servo servo1;
@@ -146,16 +153,14 @@ void move_360_one_counterclockwise(int pin, int speed, int duration){
     tempServo.detach();
 }
     
-void motor_init() {
-    pinMode(motorIN1, OUTPUT);
-    pinMode(motorIN2, OUTPUT);
-
-    // ESP32 LEDC PWM setup
-    ledcAttachPin(motorPWM, 0);   // Channel 0
-    ledcSetup(0, 5000, 8);        // 5 kHz, 8-bit
+/*void motor_init() {
+    pinMode(motor1Pin1, OUTPUT);
+    pinMode(motor1Pin2, OUTPUT);
+    pinMode(enable1Pin, OUTPUT);     // 5 kHz, 8-bit
       // 5kHz, 8-bit resolution
 
-    motor_stop();
+    analogWrite( speed);  // control motor A
+    analogWrite(PIN_ENB, speed);  // control motor B      // attach pin to that channel
 }
 
 void motor_stop() {
@@ -173,5 +178,6 @@ void motor_clockwise(int speed) {
 void motor_counterclockwise(int speed) {
     digitalWrite(motorIN1, LOW);
     digitalWrite(motorIN2, HIGH);
-    ledcWrite(0, speed);
+    ledcWrite(0, speed); 
 }
+    */

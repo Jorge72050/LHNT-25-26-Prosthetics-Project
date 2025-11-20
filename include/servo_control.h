@@ -1,10 +1,10 @@
 // This file has general rotator functions
+#pragma once
 #ifndef SERVO_CONTROL_H
 #define SERVO_CONTROL_H
 #include <Stepper.h>
 #include <L298N.h>
 #include <ESP32Servo.h>
-#include <Arduino.h>
 
 // Servo Objects
 extern Servo servo1;

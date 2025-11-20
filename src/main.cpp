@@ -52,18 +52,22 @@ void setupWiFi(){
     Serial.println(udpPort);
 }
 
+/*
 const int servoPin1 = 12;
 const int servoPin2 = 27;
 const int servoPin3 = 25;
 const int servoPin4 = 32;
 const int servoPin5 = 35;
+*/
 
+/*
 Servo servo1;
 Servo servo2;
 Servo servo3;
 Servo servo4;
 Servo servo5;
 Servo tempServo;
+*/
 
 void processUDP() {
     int packetSize = UDP.parsePacket();
