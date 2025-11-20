@@ -3,11 +3,8 @@
 #define SERVO_CONTROL_H
 #include <Stepper.h>
 #include <L298N.h>
-#if defined(ESP32)
-    #include <ESP32Servo.h>
-#else
-    #include <Servo.h>
-#endif
+#include <ESP32Servo.h>
+#include <Arduino.h>
 
 // Servo Objects
 extern Servo servo1;
@@ -73,8 +70,13 @@ void stepper_clockwise();
 void stepper_counterclockwise();
 void push_actuator();
 void pull_actuator();
+void motor_init();
+void motor_stop();
+void motor_clockwise(int speed);
+void motor_counterclockwise(int speed);
 
- /// Write dc motor functions here
- //  and implement in servo_control.cpp
+/////////////////////////////////////////////////////////////////
+// Movement helpers for steppers, linear actuators, and DC Motors
+/////////////////////////////////////////////////////////////////
 
 #endif

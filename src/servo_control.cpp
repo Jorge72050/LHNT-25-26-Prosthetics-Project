@@ -1,13 +1,18 @@
 #include "servo_control.h"
 #include <ESP32Servo.h>
+#include <Arduino.h>
 
 // Define the Servo objects (the actual memory)
 
-const int servoPin1 = 12;
-const int servoPin2 = 27;
-const int servoPin3 = 25;
-const int servoPin4 = 32;
-const int servoPin5 = 35;
+const int servoPin1 = 7;
+const int servoPin2 = 8;
+const int servoPin3 = 9;
+const int servoPin4 = 10;
+const int servoPin5 = 11;
+const int motorIN1 = 12;
+const int motorIN2 = 13;
+const int motorPWM = 14;
+
 
 Servo servo1;
 Servo servo2;
@@ -140,6 +145,33 @@ void move_360_one_counterclockwise(int pin, int speed, int duration){
     delay(duration);
     tempServo.detach();
 }
-
-void stepper_clockwise();
     
+void motor_init() {
+    pinMode(motorIN1, OUTPUT);
+    pinMode(motorIN2, OUTPUT);
+
+    // ESP32 LEDC PWM setup
+    ledcAttachPin(motorPWM, 0);   // Channel 0
+    ledcSetup(0, 5000, 8);        // 5 kHz, 8-bit
+      // 5kHz, 8-bit resolution
+
+    motor_stop();
+}
+
+void motor_stop() {
+    digitalWrite(motorIN1, LOW);
+    digitalWrite(motorIN2, LOW);
+    ledcWrite(0, 0);
+}
+
+void motor_clockwise(int speed) {
+    digitalWrite(motorIN1, HIGH);
+    digitalWrite(motorIN2, LOW);
+    ledcWrite(0, speed);    // 0–255
+}
+
+void motor_counterclockwise(int speed) {
+    digitalWrite(motorIN1, LOW);
+    digitalWrite(motorIN2, HIGH);
+    ledcWrite(0, speed);
+}
