@@ -2,8 +2,8 @@
 #pragma once
 #ifndef SERVO_CONTROL_H
 #define SERVO_CONTROL_H
+#include <Arduino.h>
 #include <Stepper.h>
-#include <L298N.h>
 #include <ESP32Servo.h>
 
 // Servo Objects
@@ -70,13 +70,21 @@ void stepper_clockwise();
 void stepper_counterclockwise();
 void push_actuator();
 void pull_actuator();
-void motor_init();
-void motor_stop();
-void motor_clockwise(int speed);
-void motor_counterclockwise(int speed);
 
 /////////////////////////////////////////////////////////////////
 // Movement helpers for steppers, linear actuators, and DC Motors
 /////////////////////////////////////////////////////////////////
+
+class Motor {
+public:
+    Motor(uint8_t in1, uint8_t in2, uint8_t pwmPin);
+
+    void begin(uint32_t freq = 20000, uint8_t resolution = 10);
+    void setSpeed(int speed);  // -1023..1023 for 10-bit resolution
+    void stop();
+
+private:
+    uint8_t _in1, _in2, _pwmPin, _resolution;
+};
 
 #endif

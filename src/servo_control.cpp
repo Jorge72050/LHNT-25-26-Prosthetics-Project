@@ -1,13 +1,9 @@
+#include <Arduino.h>
 #include "servo_control.h"
 #include <ESP32Servo.h>
-#include <L298N.h>
 // Define the Servo objects (the actual memory)
 
 const int servoPin1 = 7;
-const int servoPin2 = 8;
-const int servoPin3 = 9;
-const int servoPin4 = 10;
-const int servoPin5 = 11;
 
 // DC Motor Pin
 int pinENA = 12; 
@@ -22,33 +18,17 @@ int speed = 0;
 
 
 Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
-Servo tempServo;
+
 
 void initializeAll() {
     Serial.begin(115200);
     servo1.setPeriodHertz(50);
-    servo2.setPeriodHertz(50);
-    servo3.setPeriodHertz(50);
-    servo4.setPeriodHertz(50);
-    servo5.setPeriodHertz(50);
     servo1.attach(servoPin1);
-    servo2.attach(servoPin2);
-    servo3.attach(servoPin3);
-    servo4.attach(servoPin4);
-    servo5.attach(servoPin5);
 }
 
 void move_180_clockwise(int start_pos, int end_pos, int increment) {
     for(int pos = start_pos; pos <= end_pos; pos+=increment) {
         servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
-        servo2.writeMicroseconds(pos);
-        servo3.writeMicroseconds(pos);
-        servo4.writeMicroseconds(pos);
-        servo5.writeMicroseconds(pos);
         delay(20);   
     }
 }
@@ -56,23 +36,15 @@ void move_180_clockwise(int start_pos, int end_pos, int increment) {
 void move_180_counterclockwise(int start_pos, int end_pos, int increment) {
     for(int pos = start_pos; pos >= end_pos; pos-=increment) {
         servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
-        servo2.writeMicroseconds(pos);
-        servo3.writeMicroseconds(pos);
-        servo4.writeMicroseconds(pos);
-        servo5.writeMicroseconds(pos);
         delay(20);   
     }
 }
 
 void move_180_all_servos_to(int pos) {
     servo1.writeMicroseconds(pos);  // Set the pulse width in microseconds
-    servo2.writeMicroseconds(pos);
-    servo3.writeMicroseconds(pos);
-    servo4.writeMicroseconds(pos);
-    servo5.writeMicroseconds(pos);
 }
 
-void move_180_one_servo_to(int pin, int pos){
+/*void move_180_one_servo_to(int pin, int pos){
     tempServo.attach(pin);
     tempServo.writeMicroseconds(pos);
     delay(1000);
@@ -152,32 +124,52 @@ void move_360_one_counterclockwise(int pin, int speed, int duration){
     delay(duration);
     tempServo.detach();
 }
-    
-/*void motor_init() {
-    pinMode(motor1Pin1, OUTPUT);
-    pinMode(motor1Pin2, OUTPUT);
-    pinMode(enable1Pin, OUTPUT);     // 5 kHz, 8-bit
-      // 5kHz, 8-bit resolution
-
-    analogWrite( speed);  // control motor A
-    analogWrite(PIN_ENB, speed);  // control motor B      // attach pin to that channel
+*/
+Motor::Motor(uint8_t in1, uint8_t in2, uint8_t pwmPin)
+{
+    _in1 = in1;
+    _in2 = in2;
+    _pwmPin = pwmPin;
 }
 
-void motor_stop() {
-    digitalWrite(motorIN1, LOW);
-    digitalWrite(motorIN2, LOW);
-    ledcWrite(0, 0);
+void Motor::begin(uint32_t freq, uint8_t resolution)
+{
+    _resolution = resolution;
+
+    pinMode(_in1, OUTPUT);
+    pinMode(_in2, OUTPUT);
+
+    // ESP32 Core v3.x: ledcAttach replaces ledcSetup + ledcAttachPin
+    ledcAttach(_pwmPin, freq, resolution);
 }
 
-void motor_clockwise(int speed) {
-    digitalWrite(motorIN1, HIGH);
-    digitalWrite(motorIN2, LOW);
-    ledcWrite(0, speed);    // 0–255
+void Motor::setSpeed(int speed)
+{
+    int maxDuty = (1 << _resolution) - 1;
+
+    if (speed > 0) {
+        digitalWrite(_in1, HIGH);
+        digitalWrite(_in2, LOW);
+    }
+    else if (speed < 0) {
+        digitalWrite(_in1, LOW);
+        digitalWrite(_in2, HIGH);
+        speed = -speed;
+    }
+    else {
+        stop();
+        return;
+    }
+
+    if (speed > maxDuty) speed = maxDuty;
+
+    // ESP32 v3.x: ledcWrite(pin, duty)
+    ledcWrite(_pwmPin, speed);
 }
 
-void motor_counterclockwise(int speed) {
-    digitalWrite(motorIN1, LOW);
-    digitalWrite(motorIN2, HIGH);
-    ledcWrite(0, speed); 
+void Motor::stop()
+{
+    digitalWrite(_in1, LOW);
+    digitalWrite(_in2, LOW);
+    ledcWrite(_pwmPin, 0);
 }
-    */

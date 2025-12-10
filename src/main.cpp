@@ -8,6 +8,8 @@ WiFiUDP UDP;
 const int udpPort = 4210;
 char incomingPacket[255];
 char reply[] = "Packet received";
+WiFiServer server(80);
+
 
 //UNCOMMENT FOR HOT SPOT USE
 
@@ -45,6 +47,7 @@ void setupWiFi(){
     IPAddress IP = WiFi.softAPIP();
     Serial.print("AP IP address: ");
     Serial.println(IP);
+    server.begin();
     UDP.begin(udpPort);
     delay(1000);
 
@@ -52,41 +55,75 @@ void setupWiFi(){
     Serial.println(udpPort);
 }
 
-/*
-const int servoPin1 = 12;
-const int servoPin2 = 27;
-const int servoPin3 = 25;
-const int servoPin4 = 32;
-const int servoPin5 = 35;
-*/
-
-/*
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
-Servo tempServo;
-*/
 
 void processUDP() {
+    WiFiClient client = server.available();   // Listen for incoming clients
+    if (client) {
+        Serial.println("New Client.");
+        String currentLine = "";
+        client.stop();
+        Serial.println("Client disconnected.");
+        Serial.println("");
+    }
     int packetSize = UDP.parsePacket();
     if (packetSize) {
-        int len = UDP.read(incomingPacket, 255);
-        if (len > 0) incomingPacket[len] = 0;
+        char packet[255];
+        int len = UDP.read(packet, 255);  // len will be 2 (two characters: ‘0’ and ‘A’)
+        packet[len] = '\0';               // null-terminate the string
+        int val = strtol(packet, NULL, 16); // convert ASCII hex string to int
+        Serial.println(val);
 
         Serial.printf("Received: %s\n", incomingPacket);
+          /*  if (val == 1) {
+            Serial.println("Packet received: 1");
+            }
+            else if (val == 0) {
+            Serial.println("Packet received: 0");
+            } else if (val == 2){
+            //push_actuator();
+            } else if (val == 3){
+            //pull_actuator();
+            } else if (val == 4){
+            //stepper_clockwise();
+            } else if (val == 5){
+            //stepper_counterclockwise();
+            }
+            */
+    switch (val) {
+        case 0:
+            Serial.println("Packet received: 0");
+            break;
 
-        //servo control functions
-        if (strcmp(incomingPacket, "CW") == 0) {
-            move_180_clockwise(500, 2500, 20);
-        } else if (strcmp(incomingPacket, "CCW") == 0) {
-            move_180_counterclockwise(2500, 500, 20);
-        } else if (strcmp(incomingPacket, "STOP") == 0) {
-            move_180_all_servos_to(1500);
+        case 1:
+            Serial.println("Packet received: 1");
+            break;
+
+        case 2:
+            // push_actuator();
+            break;
+
+        case 3:
+            // pull_actuator();
+            break;
+
+        case 4:
+            // stepper_clockwise();
+            break;
+
+        case 5:
+            // stepper_counterclockwise();
+            break;
+
+        default:
+            Serial.printf("Unknown packet: %d\n", val);
+            break;
+}
+
+            UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+            UDP.write((uint8_t*)reply, strlen(reply));
+            UDP.endPacket();
         }
     }
-}
 
 void setup() {
     initializeAll();
