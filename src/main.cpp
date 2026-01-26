@@ -7,7 +7,7 @@
 WiFiUDP UDP;
 const int udpPort = 4210;
 char incomingPacket[255];
-char reply[] = "Packet received";
+char reply[32];
 WiFiServer server(80);
 
 
@@ -71,9 +71,11 @@ void processUDP() {
         int len = UDP.read(packet, 255);  // len will be 2 (two characters: ‘0’ and ‘A’)
         packet[len] = '\0';               // null-terminate the string
         int val = strtol(packet, NULL, 16); // convert ASCII hex string to int
+        snprintf(reply, sizeof(reply), "ACK:%d", val);
+
         Serial.println(val);
 
-        Serial.printf("Received: %s\n", incomingPacket);
+        Serial.printf("Received: %s\n", packet);
           /*  if (val == 1) {
             Serial.println("Packet received: 1");
             }
