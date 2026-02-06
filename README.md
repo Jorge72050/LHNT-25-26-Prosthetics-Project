@@ -37,7 +37,7 @@ Hardware-Software Interfacing (HSI) - The HSI team currently working on integrat
 - Members: Shah Aarya, Andrew Jung, Arjun Kulkarni, Esha Shenoy, Arya Soppannavar
 
 #### *Hardware Software Integration*:
-- Integrate binary signals from machine learning into servo control for opening and closing the hand. Design and develop software for microcontrollers and all
+- Integrate binary signals from machine learning into servo control for opening and closing the hand. Design and develop software for microcontrollers and all electronics
 - Team Lead: Jorge Nunez
 - Members: Maggie Flinn, Soorya Narayaran, Sojung Kim, Nikitha Vandanapu
 
