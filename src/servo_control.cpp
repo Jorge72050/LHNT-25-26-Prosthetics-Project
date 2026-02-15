@@ -5,7 +5,7 @@
 
 const int servoPin1 = 7;
 
-// DC Motor Pin
+// DC Motor Pin 
 int pinENA = 12; 
 int pinENB = 13; 
 //int enable1Pin = 14; 
@@ -16,9 +16,7 @@ const int pwmChannel = 0;
 const int resolution = 8;
 int speed = 0;
 
-
 Servo servo1;
-
 
 void initializeAll() {
     Serial.begin(115200);
@@ -140,7 +138,7 @@ void Motor::begin(uint32_t freq, uint8_t resolution)
     pinMode(_in2, OUTPUT);
 
     // ESP32 Core v3.x: ledcAttach replaces ledcSetup + ledcAttachPin
-    ledcAttach(_pwmPin, freq, resolution);
+    // ledcAttach(_pwmPin, freq, resolution);
 }
 
 void Motor::setSpeed(int speed)
@@ -173,3 +171,5 @@ void Motor::stop()
     digitalWrite(_in2, LOW);
     ledcWrite(_pwmPin, 0);
 }
+
+
