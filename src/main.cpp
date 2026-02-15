@@ -13,6 +13,7 @@ WiFiServer server(80);
 
 //UNCOMMENT FOR HOT SPOT USE
 
+
 // const char* ssid = "WIFI_NAME";
 // const char* password = "WIFI_PASSWORD";
 
