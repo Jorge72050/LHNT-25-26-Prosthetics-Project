@@ -13,7 +13,7 @@ void setup() {
     pinMode(EncoderPinB, INPUT);
     attachInterrupt(digitalPinToInterrupt(EncoderPinA), updateEncoder, RISING);
     Serial.begin(9600);
-}
+}1
 void loop() {
     digitalWrite(ForwardPin,HIGH);
     digitalWrite(BackwardPin,LOW);
