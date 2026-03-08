@@ -33,6 +33,7 @@ WiFiServer server(80);
 //     Serial.printf("Listening on UDP port %d\n", udpPort);
 // }
 
+
 //FOR ACCESS POINT CREATION
 const char* ssid = "Test_AP";
 const char* password = "12345678";
