@@ -1,3 +1,4 @@
+// #include <Arduino.h>
 #define EncoderPinA 18
 #define EncoderPinB 21
 #define ForwardPin 27
@@ -6,14 +7,14 @@
 
 volatile long Encodervalue=0;
 void setup() {
-    pinMode(ForwardPin,OUTPUT);
+    pinMode(ForwardPin, OUTPUT);
     pinMode(BackwardPin,OUTPUT);
-    pinMode(EnablePin,OUTPUT);
+    pinMode(EnablePin, OUTPUT);
     pinMode(EncoderPinA, INPUT);
     pinMode(EncoderPinB, INPUT);
     attachInterrupt(digitalPinToInterrupt(EncoderPinA), updateEncoder, RISING);
     Serial.begin(9600);
-}1
+}
 void loop() {
     digitalWrite(ForwardPin,HIGH);
     digitalWrite(BackwardPin,LOW);

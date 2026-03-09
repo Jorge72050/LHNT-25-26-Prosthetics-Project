@@ -13,26 +13,25 @@ WiFiServer server(80);
 
 //UNCOMMENT FOR HOT SPOT USE
 
+/*
+const char* ssid = "WIFI_NAME";
+const char* password = "WIFI_PASSWORD";
+void setupWiFi() {
+    Serial.begin(115200);
+    Serial.printf("Connecting to %s", ssid);
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("\nWiFi connected!");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
 
-// const char* ssid = "WIFI_NAME";
-// const char* password = "WIFI_PASSWORD";
-
-// void setupWiFi() {
-//     Serial.begin(115200);
-//     Serial.printf("Connecting to %s", ssid);
-//     WiFi.begin(ssid, password);
-//     while (WiFi.status() != WL_CONNECTED) {
-//         delay(500);
-//         Serial.print(".");
-//     }
-//     Serial.println("\nWiFi connected!");
-//     Serial.print("IP address: ");
-//     Serial.println(WiFi.localIP());
-
-//     udp.begin(udpPort);
-//     Serial.printf("Listening on UDP port %d\n", udpPort);
-// }
-
+    udp.begin(udpPort);
+    Serial.printf("Listening on UDP port %d\n", udpPort);
+}
+*/ 
 
 //FOR ACCESS POINT CREATION
 const char* ssid = "Test_AP";
@@ -67,6 +66,7 @@ void processUDP() {
         Serial.println("Client disconnected.");
         Serial.println("");
     }
+    
     int packetSize = UDP.parsePacket();
     if (packetSize) {
         char packet[255];
