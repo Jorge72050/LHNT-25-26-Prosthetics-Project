@@ -28,10 +28,10 @@ Hardware-Software Interfacing (HSI) - The HSI team currently working on integrat
 
 #### *Electronics*:
 - Design the joints and tensile forces behind them to allow for the opening and closing of the hand. Responsible for electronics and wiring of the prosthetic hand.
-- Team Lead: Jorge Nunez
-- Members: Perla Mendoza, Alicia Richard, Aprameya Sudharsan, Zara Siddqi, Alper Yusuf
+- Team Lead: Zara Siddiqi
+- Members: Alicia Richard, Aprameya Sudharsan, Zara Siddqi, Alper Yusuf
 
-#### *3D Modeling Team*:
+#### *Design Team*:
 - Design the prosthetic hand and mounts necessary for motor placement and control.
 - Team Lead: Kate Long
 - Members: Shah Aarya, Andrew Jung, Arjun Kulkarni, Esha Shenoy, Arya Soppannavar

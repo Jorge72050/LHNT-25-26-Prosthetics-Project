@@ -1,7 +1,5 @@
 // This file has general rotator functions
 #pragma once
-#ifndef SERVO_CONTROL_H
-#define SERVO_CONTROL_H
 #include <Arduino.h>
 #include <Stepper.h>
 #include <ESP32Servo.h>
@@ -72,19 +70,16 @@ void push_actuator();
 void pull_actuator();
 
 /////////////////////////////////////////////////////////////////
-// Movement helpers for steppers, linear actuators, and DC Motors
+// Helpers for joystick + infrared sensors
 /////////////////////////////////////////////////////////////////
+void joystickPolarInit(int pinX, int pinY, int samples = 200);
 
-class Motor {
-public:
-    Motor(uint8_t in1, uint8_t in2, uint8_t pwmPin);
+// Returns true if joystick is pushed out far enough to count as a “rotation gesture”
+bool joystickPolarActive();
 
-    void begin(uint32_t freq = 20000, uint8_t resolution = 10);
-    void setSpeed(int speed);  // -1023..1023 for 10-bit resolution
-    void stop();
+// Clockwise progress around the circle, 0.0 .. 1.0
+// (0 = fully open, 1 = fully closed) IF you map it that way.
+float joystickPolarGetCW01();
 
-private:
-    uint8_t _in1, _in2, _pwmPin, _resolution;
-};
-
-#endif
+// Optional: joystick radius (how far from center)
+float joystickPolarGetRadius();
