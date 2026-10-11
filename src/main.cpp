@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <ESP32Servo.h>
 #include "servo_control.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 // ---------------------------------------------------------------
 // UDP setup
