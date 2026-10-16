@@ -1,3 +1,9 @@
+#include <Arduino.h>
+
+void stopAll();
+void setMotor(int index, char direction, int speed);
+
+
 // 5-motor control: direction + PWM speed via Serial Monitor (9600 baud, Newline)
 // Commands: "1 F 200" (motor 1 forward, speed 200), "3 B 100", "2 S" (stop motor 2), "X" (stop all)
 // Works on Arduino-ESP32 core 2.x AND 3.x (uses LEDC instead of analogWrite)
