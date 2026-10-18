@@ -5,9 +5,9 @@
  
 void setup() {
   ledcSetup(0, 20000, 8);
-  ledcAttachPin(26, 0);        // PWM on AIN1
-  pinMode(27, OUTPUT);
-  digitalWrite(27, LOW);       // AIN2 held LOW
+  ledcAttachPin(27, 0);        // PWM on AIN1
+  pinMode(26, OUTPUT);
+  digitalWrite(26, LOW);       // AIN2 held LOW
 }
  
 void loop() {
