@@ -14,6 +14,12 @@ We selected the ESP32 Dev Module as our microcontroller. ESP32s often need exter
 The file structure was created in VS Code using the [PlatformIO](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) extension. All files are set up such that when the repository is cloned, all dependencies are installed and the code can be ran and built after installation.
 In addition, an Arduino folder is present if the PlatformIO extension does not work for users. All code is identical but translated between setups.
 
+### Tools (Python, run on your computer)
+
+- `tools/band_stream.py` - record EMG band sessions to a file, replay them, or generate fake band data, so gesture code can be tested without the band. Usage is at the top of the file.
+- `tools/motor_telemetry.py` - read live motor data (angle, speed, direction) from `src/motor.cpp` for the 3D visualization.
+- Both need `pip install pyserial` only when talking to real hardware over USB.
+
 ## Current Goals
 
 3D Modeling - The 3D modeling team is currently working on developing a wearable mount and DC Motor holders for full wearability. In addition, they are making modifications to the Tact prosthetic hand base design for greater grip control.
