@@ -2,7 +2,7 @@
 #include <Arduino.h>
 // Simplest DRV8833 test: motor A slowly speeds up, then restarts.
 
- 
+ /*
 void setup() {
   ledcSetup(0, 20000, 8);
   ledcAttachPin(27, 0);        // PWM on AIN1
@@ -16,10 +16,10 @@ void loop() {
     delay(100);
   }
 }
- 
+ */
 
 
-/*
+
 // Both motors speed up together, then restart.
 //double
 void setup() {
@@ -36,4 +36,3 @@ void loop() {
     delay(100);
   }
 }
-*/
