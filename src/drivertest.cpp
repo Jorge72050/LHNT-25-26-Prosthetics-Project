@@ -19,7 +19,7 @@ void loop() {
  */
 
 
-
+/*
 // Both motors speed up together, then restart.
 //double
 void setup() {
@@ -35,4 +35,11 @@ void loop() {
     ledcWrite(1, pwm);
     delay(100);
   }
+}
+*/
+void setup() { Serial.begin(115200); }       //fsr test 
+
+void loop() {
+  Serial.println(analogRead(32));   // 0 to 4095
+  delay(100);
 }
