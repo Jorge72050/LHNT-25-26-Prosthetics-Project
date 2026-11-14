@@ -1,3 +1,4 @@
+import json
 import socket
 import time
 
@@ -5,11 +6,14 @@ ESP32_IP = "127.0.0.1"   # change to the real ESP32 IP later
 ESP32_PORT = 5005        # change to match run_udp.py later
 TIMEOUT_SECONDS = 1.0
 LOG_FILE = "gesture_log.txt"
+RECORDING = "sessions/mock_gestures.jsonl"
 
+# Keys must match the gesture names in the recording.
+# These are the mock names. When real band recordings exist, replace
+# them with the real gesture names and agree the commands with your team.
 GESTURE_TO_COMMAND = {
-    "fist": "GRIP_CLOSE",
-    "open_hand": "GRIP_OPEN",
-    "index_tap": "POINT",
+    "close": "GRIP_CLOSE",
+    "open": "GRIP_OPEN",
     "rest": "STOP",
 }
 
@@ -47,14 +51,24 @@ def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.settimeout(TIMEOUT_SECONDS)
 
-    # replayed (mock) gestures
-    replay = ["fist", "open_hand", "index_tap", "rest"]
-
     seq = 1
-    for gesture in replay:
+    f = open(RECORDING, "r")
+    for line in f:
+        event = json.loads(line)
+
+        # only gesture events have a "label"; header and raw samples are skipped
+        if "label" not in event:
+            continue
+
+        gesture = event["label"]
+        if gesture not in GESTURE_TO_COMMAND:
+            log("IGNORED unknown gesture " + gesture)
+            continue
+
         send_gesture(sock, seq, gesture)
         seq = seq + 1
         time.sleep(0.5)
+    f.close()
 
     sock.close()
 
